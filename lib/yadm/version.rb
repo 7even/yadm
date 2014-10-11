@@ -1,3 +1,3 @@
-module Yadm
+module YADM
   VERSION = '0.0.1'
 end

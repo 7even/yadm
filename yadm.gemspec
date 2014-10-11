@@ -5,7 +5,7 @@ require 'yadm/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'yadm'
-  spec.version       = Yadm::VERSION
+  spec.version       = YADM::VERSION
   spec.authors       = ['Vsevolod Romashov']
   spec.email         = ['7@7vn.ru']
   spec.summary       = %q{TODO: Write a short summary. Required.}

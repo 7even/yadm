@@ -1,5 +1,5 @@
 require 'yadm/version'
 
-module Yadm
+module YADM
   # Your code goes here...
 end
