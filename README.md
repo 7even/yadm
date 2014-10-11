@@ -24,7 +24,92 @@ $ gem install yadm
 
 ## Usage
 
-TODO: Write usage instructions here
+Data Mapper consists of several components:
+
+* entities
+* repositories
+* mapper
+* adapters
+
+### Entities
+
+You can create an entity by defining a class that includes `YADM::Entity`:
+
+``` ruby
+class Person
+  include YADM::Entity
+  
+  attributes :id, :first_name, :last_name, :email, :password
+end
+```
+
+### Repositories
+
+Similarly, repositories are just modules that include `YADM::Repository`:
+
+``` ruby
+module People
+  include YADM::Repository
+  
+  class << self
+    def unnamed
+      with(first_name: nil, last_name: nil)
+    end
+  end
+end
+```
+
+### Mapper
+
+Mapper is the central part glueing everything together - it connects
+the repositories with the data sources.
+
+``` ruby
+YADM.map do
+  repo People do
+    adapter :sql
+    
+    table :people
+    
+    attribute :id,         Integer
+    attribute :first_name, String
+    attribute :last_name,  String
+    attribute :email,      String
+    attribute :password,   String
+  end
+end
+```
+
+### Creating a new record
+
+``` ruby
+john = Person.new(
+  first_name: 'John',
+  last_name:  'Smith',
+  email:      'john@smiths.com',
+  password:   'secret'
+)
+
+People.persist(john)
+
+john.persisted? # => true
+jonh.id         # => 1
+```
+
+### Updating a record
+
+``` ruby
+john.password = 'f1E2m0CdP'
+People.persist(john)
+```
+
+### Deleting a record
+
+``` ruby
+People.delete(john)
+
+john.persisted? # => false
+```
 
 ## Contributing
 
