@@ -1,3 +1,5 @@
+require 'yadm'
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     # be_bigger_than(2).and_smaller_than(4).description
