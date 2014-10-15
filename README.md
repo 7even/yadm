@@ -50,6 +50,7 @@ Similarly, repositories are just modules that include `YADM::Repository`:
 ``` ruby
 module People
   include YADM::Repository
+  entity Person
   
   class << self
     def unnamed
@@ -65,18 +66,64 @@ Mapper is the central part glueing everything together - it connects
 the repositories with the data sources.
 
 ``` ruby
-YADM.map do
-  repo People do
-    adapter :sql
+YADM.setup do
+  postgres = connect(:sql) do
+    adapter :postgres
     
-    table :people
-    
-    attribute :id,         Integer
-    attribute :first_name, String
-    attribute :last_name,  String
-    attribute :email,      String
-    attribute :password,   String
+    host     'localhost'
+    database 'blog'
+    user     'user'
+    password 'password'
   end
+  
+  map do
+    repo People do
+      data_source postgres
+      
+      table :people
+      
+      attribute :id,         Integer
+      attribute :first_name, String
+      attribute :last_name,  String
+      attribute :email,      String
+      attribute :password,   String
+    end
+  end
+end
+```
+
+### Adapters
+
+You can use any adapter as a data source by providing it the connection
+parameters.
+
+#### Memory
+
+The memory adapter doesn't need any configuration.
+
+``` ruby
+YADM.setup do
+  memory = connect(:memory)
+  # use `memory` as a data source in some repository
+end
+```
+
+#### SQL
+
+In order to connect to a database you have to provide connection parameters:
+
+``` ruby
+YADM.setup do
+  postgres = connect(:sql) do
+    adapter :postgres
+    
+    host     'localhost'
+    database 'blog'
+    user     'user'
+    password 'password'
+  end
+  
+  # use `postgres` as a data source in some repository
 end
 ```
 
