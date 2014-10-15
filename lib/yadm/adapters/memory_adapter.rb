@@ -45,7 +45,7 @@ module YADM
         
         def add(object)
           next_id.tap do |new_id|
-            objects[new_id] = object
+            objects[new_id] = object.merge(id: new_id)
           end
         end
         

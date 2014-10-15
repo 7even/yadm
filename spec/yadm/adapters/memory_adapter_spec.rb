@@ -12,7 +12,7 @@ RSpec.describe YADM::Adapters::MemoryAdapter do
     
     context 'with a valid id' do
       it 'returns the record with the specified id' do
-        expect(subject.get(:people, 1)).to eq(person_attributes)
+        expect(subject.get(:people, 1)).to eq(person_attributes.merge(id: 1))
       end
     end
     
@@ -34,6 +34,11 @@ RSpec.describe YADM::Adapters::MemoryAdapter do
     
     it 'returns id of the created record' do
       expect(subject.add(:people, person_attributes)).to eq(1)
+    end
+    
+    it 'adds the id attribute to the created object' do
+      id = subject.add(:people, person_attributes)
+      expect(subject.get(:people, id)[:id]).to eq(id)
     end
   end
   
