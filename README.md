@@ -80,7 +80,7 @@ YADM.setup do
     repo People do
       data_source postgres
       
-      table :people
+      collection :people
       
       attribute :id,         Integer
       attribute :first_name, String
