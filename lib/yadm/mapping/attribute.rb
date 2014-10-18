@@ -9,10 +9,14 @@ module YADM
       end
       
       attr_reader :type
-      private :type
+      protected :type
       
       def initialize(type)
         @type = type
+      end
+      
+      def ==(other)
+        type == other.type
       end
       
       def coerce(value)
