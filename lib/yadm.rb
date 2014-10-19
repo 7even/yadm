@@ -17,8 +17,16 @@ module YADM
       data_sources[name] = IdentityMap.new(data_source)
     end
     
+    def map(&block)
+      mapper.instance_eval(&block) unless block.nil?
+    end
+    
     def data_sources
       @data_sources ||= {}
+    end
+    
+    def mapper
+      @mapper ||= Mapper.new
     end
   end
 end

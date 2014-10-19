@@ -26,4 +26,15 @@ RSpec.describe YADM do
       expect(data_source.send(:data_source)).to be_a(YADM::Adapters::MemoryAdapter)
     end
   end
+  
+  describe '.map' do
+    it 'evaluates the block in context of the mapper' do
+      mapper = nil
+      YADM.map do
+        mapper = self
+      end
+      
+      expect(mapper).to be_a(YADM::Mapper)
+    end
+  end
 end
