@@ -14,5 +14,10 @@ module YADM
     def get(collection, id)
       map[collection][id] ||= data_source.get(collection, id).dup
     end
+    
+    def add(collection, attributes)
+      id = data_source.add(collection, attributes)
+      map[collection][id] = attributes.merge(id: id)
+    end
   end
 end
