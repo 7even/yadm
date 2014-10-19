@@ -67,6 +67,18 @@ RSpec.describe YADM::Repository do
     end
   end
   
+  describe '.delete' do
+    let(:entity) { entity_class.new(id: 1, first_name: 'John', last_name: 'Smith') }
+    
+    it 'deletes the entity' do
+      repository.delete(entity)
+      
+      expect {
+        repository.find(1)
+      }.to raise_error(KeyError)
+    end
+  end
+  
   after(:each) do
     YADM.data_sources.delete(:memory_store)
   end
