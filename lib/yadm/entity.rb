@@ -18,6 +18,7 @@ module YADM
     class << self
       def included(including_class)
         including_class.extend(DSL)
+        including_class.attribute(:id)
       end
     end
     

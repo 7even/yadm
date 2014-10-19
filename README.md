@@ -41,7 +41,7 @@ You can create an entity by defining a class that includes `YADM::Entity`:
 class Person
   include YADM::Entity
   
-  attributes :id, :first_name, :last_name, :email, :password
+  attributes :first_name, :last_name, :email, :password
 end
 ```
 

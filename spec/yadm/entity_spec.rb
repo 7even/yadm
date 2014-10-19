@@ -8,7 +8,7 @@ RSpec.describe YADM::Entity do
   describe '.attributes' do
     before(:each) do
       entity_class.class_eval do
-        attributes :id, :name
+        attributes :name
       end
     end
     
