@@ -12,6 +12,15 @@ module YADM
         wrap_object(mapping.get(id))
       end
       
+      def persist(entity)
+        if entity.id.nil?
+          entity.id = mapping.add(entity.attributes)
+        else
+          new_attributes = entity.attributes
+          mapping.change(new_attributes.delete(:id), new_attributes)
+        end
+      end
+      
       def wrap_object(attributes)
         entity_class.new(attributes)
       end

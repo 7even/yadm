@@ -1,23 +1,40 @@
-require 'ostruct'
+require 'yadm/adapters/memory_adapter'
 
 RSpec.describe YADM::Repository do
+  let(:entity_class) do
+    Class.new do
+      include YADM::Entity
+      attributes :first_name, :last_name
+    end
+  end
+  
   let(:repository) do
+    person = entity_class
+    
     Class.new do
       include YADM::Repository
-      entity OpenStruct
+      entity person
     end
   end
   
   before(:each) do
-    attributes = { id: 1, first_name: 'John', last_name: 'Smith' }
+    YADM.data_source :memory_store, adapter: :memory
     
-    mapping = double("Mapping")
-    allow(mapping).to receive(:get).with(1).and_return(attributes)
-    
-    mapper = double("Mapper")
-    allow(mapper).to receive(:mapping_for).with(repository).and_return(mapping)
+    mapper = YADM::Mapper.new.tap do |mapper|
+      mapper.repository(repository) do
+        data_source :memory_store
+        collection  :people
+        
+        attribute :id,         Integer
+        attribute :first_name, String
+        attribute :last_name,  String
+      end
+    end
     
     allow(YADM).to receive(:mapper).and_return(mapper)
+    
+    attributes = { first_name: 'John', last_name: 'Smith' }
+    YADM.mapper.mapping_for(repository).add(attributes)
   end
   
   describe '.find' do
@@ -28,5 +45,29 @@ RSpec.describe YADM::Repository do
       expect(record.first_name).to eq('John')
       expect(record.last_name).to eq('Smith')
     end
+  end
+  
+  describe '.persist' do
+    context 'with a new object' do
+      let(:entity) { entity_class.new(first_name: 'Jack', last_name: 'Sparrow') }
+      
+      it 'persists the entity and assigns the id to it' do
+        repository.persist(entity)
+        expect(entity.id).to eq(2)
+      end
+    end
+    
+    context 'with an existing object' do
+      let(:entity) { entity_class.new(id: 1, first_name: 'Johnny', last_name: 'Smith') }
+      
+      it 'persists the changes made to the entity' do
+        repository.persist(entity)
+        expect(repository.find(1).first_name).to eq('Johnny')
+      end
+    end
+  end
+  
+  after(:each) do
+    YADM.data_sources.delete(:memory_store)
   end
 end
