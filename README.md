@@ -28,10 +28,12 @@ Data Mapper consists of several components:
 
 * entities
 * repositories
+* data sources
 * mapper
-* adapters
 
 ### Entities
+
+Entity is a basic object with some attributes.
 
 You can create an entity by defining a class that includes `YADM::Entity`:
 
@@ -45,7 +47,11 @@ end
 
 ### Repositories
 
-Similarly, repositories are just modules that include `YADM::Repository`:
+A repository is a module representing a collection of entities. It can fetch
+the objects from the data store and persist the changes back.
+
+A repository is created as a module that includes `YADM::Repository`
+and specifies it's entity:
 
 ``` ruby
 module People
@@ -60,23 +66,34 @@ module People
 end
 ```
 
-### Mapper
+### Data sources
 
-Mapper is the central part glueing everything together - it connects
-the repositories with the data sources.
+Data sources are objects that encapsulate the knowledge how to read the data
+and write it back. They are defined by adapters for different
+data storage solutions; YADM ships with the memory adapter.
+
+You can register a data source with your own unique name
+(specifying the adapter):
 
 ``` ruby
 YADM.setup do
-  data_source :postgres, adapter: :postgresql do
-    host     'localhost'
-    database 'blog'
-    user     'user'
-    password 'password'
-  end
-  
+  data_source :memory_store, adapter: :memory
+end
+```
+
+### Mapper
+
+Mapper is the central part glueing everything together - it connects
+repositories to data sources.
+
+Assuming the `memory_store` data source created earlier
+we can link the repository to it and define some attributes:
+
+``` ruby
+YADM.setup do
   map do
     repository People do
-      data_source :postgres
+      data_source :memory_store
       collection  :people
       
       attribute :id,         Integer
@@ -86,41 +103,6 @@ YADM.setup do
       attribute :password,   String
     end
   end
-end
-```
-
-### Adapters
-
-You can use any adapter as a data source by providing it the connection
-parameters.
-
-#### Memory
-
-The memory adapter doesn't need any configuration.
-
-``` ruby
-YADM.setup do
-  memory = connect(:memory)
-  # use `memory` as a data source in some repository
-end
-```
-
-#### SQL
-
-In order to connect to a database you have to provide connection parameters:
-
-``` ruby
-YADM.setup do
-  postgres = connect(:sql) do
-    adapter :postgres
-    
-    host     'localhost'
-    database 'blog'
-    user     'user'
-    password 'password'
-  end
-  
-  # use `postgres` as a data source in some repository
 end
 ```
 
