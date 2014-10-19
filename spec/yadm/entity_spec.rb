@@ -25,11 +25,19 @@ RSpec.describe YADM::Entity do
     end
     
     context 'with `readonly` option' do
+      before(:each) do
+        entity_class.class_eval do
+          attribute :password, readonly: true
+        end
+      end
+      
+      let(:entity) { entity_class.new(id: 1, name: 'John', password: 'secret') }
+      
       it 'defines just a reader' do
-        expect(entity.id).to eq(1)
+        expect(entity.password).to eq('secret')
         
         expect {
-          entity.id = 2
+          entity.password = 'hello'
         }.to raise_error(NoMethodError)
       end
     end
