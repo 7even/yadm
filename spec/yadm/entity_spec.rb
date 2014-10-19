@@ -24,6 +24,16 @@ RSpec.describe YADM::Entity do
       expect(entity.name).to eq('Jack')
     end
     
+    context 'with `readonly` option' do
+      it 'defines just a reader' do
+        expect(entity.id).to eq(1)
+        
+        expect {
+          entity.id = 2
+        }.to raise_error(NoMethodError)
+      end
+    end
+    
     context 'with string parameters' do
       before(:each) do
         entity_class.class_eval do

@@ -18,12 +18,12 @@ module YADM
     class << self
       def included(including_class)
         including_class.extend(DSL)
-        including_class.attribute(:id)
+        including_class.attribute(:id, readonly: true)
       end
     end
     
     module DSL
-      def attribute(attr_name)
+      def attribute(attr_name, readonly: false)
         attr_name = attr_name.to_sym
         
         attributes.add(attr_name)
@@ -34,7 +34,7 @@ module YADM
         
         define_method("#{attr_name}=") do |new_value|
           attributes[attr_name] = new_value
-        end
+        end unless readonly
       end
       
       def attributes(*attr_names)
