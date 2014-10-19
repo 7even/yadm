@@ -42,4 +42,33 @@ RSpec.describe YADM::IdentityMap do
       expect(subject.get(:people, 2)[:id]).to eq(2)
     end
   end
+  
+  describe '#change' do
+    context 'without an object in map' do
+      before(:each) do
+        subject.change(:people, 1, name: 'David')
+      end
+      
+      it 'changes the object in the data source' do
+        expect(data_source.get(:people, 1)[:name]).to eq('David')
+      end
+      
+      it 'adds the object to the map' do
+        expect(data_source).not_to receive(:get)
+        expect(subject.get(:people, 1)[:id]).to eq(1)
+      end
+    end
+    
+    context 'with an object in map' do
+      before(:each) do
+        subject.get(:people, 1)
+        subject.change(:people, 1, name: 'David')
+      end
+      
+      it 'updates the object in the map' do
+        expect(data_source).not_to receive(:get)
+        expect(subject.get(:people, 1)[:name]).to eq('David')
+      end
+    end
+  end
 end
