@@ -67,7 +67,7 @@ module YADM
         end
         
         def id_sequence
-          Enumerator.new do |yielder|
+          @sequence ||= Enumerator.new do |yielder|
             id = 0
             loop do
               id += 1

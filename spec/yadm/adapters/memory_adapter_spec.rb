@@ -40,6 +40,13 @@ RSpec.describe YADM::Adapters::MemoryAdapter do
       id = subject.add(:people, person_attributes)
       expect(subject.get(:people, id)[:id]).to eq(id)
     end
+    
+    it 'increments the id with each record' do
+      5.times { subject.add(:people, person_attributes) }
+      
+      expect(subject.count(:people)).to eq(5)
+      expect(subject.get(:people, 5)).to eq(person_attributes.merge(id: 5))
+    end
   end
   
   describe '.change' do
