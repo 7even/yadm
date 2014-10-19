@@ -12,7 +12,8 @@ module YADM
     end
     
     def data_source(name, adapter:, &block)
-      data_sources[name] = Adapters.fetch(adapter).new(&block)
+      data_source = Adapters.fetch(adapter).new(&block)
+      data_sources[name] = IdentityMap.new(data_source)
     end
     
     def data_sources

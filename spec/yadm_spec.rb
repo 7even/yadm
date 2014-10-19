@@ -19,8 +19,11 @@ RSpec.describe YADM do
       end
     end
     
-    it 'creates a data source' do
-      expect(YADM.data_sources[:memory_store]).to be_a(YADM::Adapters::MemoryAdapter)
+    it 'creates a data source wrapped in an identity map' do
+      data_source = YADM.data_sources[:memory_store]
+      
+      expect(data_source).to be_a(YADM::IdentityMap)
+      expect(data_source.send(:data_source)).to be_a(YADM::Adapters::MemoryAdapter)
     end
   end
 end
