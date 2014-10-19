@@ -6,27 +6,66 @@ RSpec.describe YADM::Mapping do
   
   before(:each) do
     data_source.add(:people, name: 'John', age: '35')
-  end
-  
-  let(:attrs) do
-    {
-      id:   YADM::Mapping::Attribute.new(Integer),
-      name: YADM::Mapping::Attribute.new(String),
-      age:  YADM::Mapping::Attribute.new(Integer)
-    }
-  end
-  
-  subject do
-    YADM::Mapping.new(identity_map, :people, attributes: attrs)
+    YADM.data_sources[:source] = identity_map
   end
   
   describe '#get' do
+    subject do
+      YADM::Mapping.new do
+        data_source :source
+        collection  :people
+        
+        attribute :id, Integer
+        attribute :name, String
+        attribute :age, Integer
+      end
+    end
+    
     it 'returns a hash with converted attributes' do
       hash = subject.get(1)
       
       expect(hash[:id]).to eq(1)
       expect(hash[:name]).to eq('John')
       expect(hash[:age]).to eq(35)
+    end
+  end
+  
+  describe YADM::Mapping::DSL do
+    describe '#data_source' do
+      let(:mapping) do
+        YADM::Mapping.new do
+          data_source :source
+        end
+      end
+      
+      it 'specifies the data source identifier' do
+        expect(mapping.data_source).to eq(identity_map)
+      end
+    end
+    
+    describe '#collection' do
+      let(:mapping) do
+        YADM::Mapping.new do
+          collection :people
+        end
+      end
+      
+      it 'specifies the collection' do
+        expect(mapping.collection).to eq(:people)
+      end
+    end
+    
+    describe '#attribute' do
+      let(:mapping) do
+        YADM::Mapping.new do
+          attribute :id, Integer
+        end
+      end
+      
+      it 'adds a new attribute' do
+        expect(mapping.attributes).to have_key(:id)
+        expect(mapping.attributes[:id]).to eq(YADM::Mapping::Attribute.new(Integer))
+      end
     end
   end
 end
