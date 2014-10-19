@@ -29,5 +29,10 @@ module YADM
         map[collection][id] = new_attributes.merge(id: id)
       end
     end
+    
+    def remove(collection, id)
+      data_source.remove(collection, id)
+      map[collection].delete(id)
+    end
   end
 end

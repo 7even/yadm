@@ -71,4 +71,26 @@ RSpec.describe YADM::IdentityMap do
       end
     end
   end
+  
+  describe '#remove' do
+    it 'removes the object from the data source' do
+      subject.remove(:people, 1)
+      expect(data_source.count(:people)).to be_zero
+    end
+    
+    context 'with an object in map' do
+      before(:each) do
+        subject.get(:people, 1)
+        subject.remove(:people, 1)
+      end
+      
+      it 'removes the object from the map' do
+        expect(data_source).to receive(:get).with(:people, 1).and_call_original
+        
+        expect {
+          subject.get(:people, 1)
+        }.to raise_error(KeyError)
+      end
+    end
+  end
 end
