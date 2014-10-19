@@ -67,9 +67,7 @@ the repositories with the data sources.
 
 ``` ruby
 YADM.setup do
-  postgres = connect(:sql) do
-    adapter :postgres
-    
+  data_source :postgres, adapter: :postgresql do
     host     'localhost'
     database 'blog'
     user     'user'
@@ -77,10 +75,9 @@ YADM.setup do
   end
   
   map do
-    repo People do
-      data_source postgres
-      
-      collection :people
+    repository People do
+      data_source :postgres
+      collection  :people
       
       attribute :id,         Integer
       attribute :first_name, String

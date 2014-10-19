@@ -3,6 +3,7 @@ require 'yadm/entity'
 require 'yadm/adapters'
 require 'yadm/identity_map'
 require 'yadm/mapping'
+require 'yadm/mapper'
 require 'yadm/repository'
 
 module YADM
