@@ -29,17 +29,21 @@ RSpec.describe YADM::IdentityMap do
   end
   
   describe '#add' do
-    before(:each) do
-      subject.add(:people, name: 'Jack')
-    end
-    
     it 'saves the object in the data source' do
+      subject.add(:people, name: 'Jack')
+      
       expect(data_source.get(:people, 2)[:name]).to eq('Jack')
     end
     
     it 'saves the object in the map' do
+      subject.add(:people, name: 'Jack')
+      
       expect(data_source).not_to receive(:get)
       expect(subject.get(:people, 2)[:id]).to eq(2)
+    end
+    
+    it 'returns the id of the added record' do
+      expect(subject.add(:people, name: 'Jack')).to eq(2)
     end
   end
   

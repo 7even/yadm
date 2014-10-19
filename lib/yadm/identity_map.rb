@@ -16,8 +16,9 @@ module YADM
     end
     
     def add(collection, attributes)
-      id = data_source.add(collection, attributes)
-      map[collection][id] = attributes.merge(id: id)
+      data_source.add(collection, attributes).tap do |id|
+        map[collection][id] = attributes.merge(id: id)
+      end
     end
     
     def change(collection, id, new_attributes)
