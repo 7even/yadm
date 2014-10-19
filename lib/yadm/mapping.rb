@@ -15,6 +15,18 @@ module YADM
       end
     end
     
+    def add(attributes)
+      data_source.add(collection, attributes)
+    end
+    
+    def change(id, attributes)
+      data_source.change(collection, id, attributes)
+    end
+    
+    def remove(id)
+      data_source.remove(collection, id)
+    end
+    
     module DSL
       def data_source(data_source_identifier = nil)
         if data_source_identifier.nil?

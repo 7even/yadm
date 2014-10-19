@@ -9,24 +9,45 @@ RSpec.describe YADM::Mapping do
     YADM.data_sources[:source] = identity_map
   end
   
-  describe '#get' do
-    subject do
-      YADM::Mapping.new do
-        data_source :source
-        collection  :people
-        
-        attribute :id, Integer
-        attribute :name, String
-        attribute :age, Integer
-      end
+  let(:people_mapping) do
+    YADM::Mapping.new do
+      data_source :source
+      collection  :people
+      
+      attribute :id, Integer
+      attribute :name, String
+      attribute :age, Integer
     end
-    
+  end
+  
+  describe '#get' do
     it 'returns a hash with converted attributes' do
-      hash = subject.get(1)
+      hash = people_mapping.get(1)
       
       expect(hash[:id]).to eq(1)
       expect(hash[:name]).to eq('John')
       expect(hash[:age]).to eq(35)
+    end
+  end
+  
+  describe '#add' do
+    it 'passes the method call to the data source' do
+      people_mapping.add(name: 'Jack', age: 27)
+      expect(people_mapping.get(2)[:name]).to eq('Jack')
+    end
+  end
+  
+  describe '#change' do
+    it 'passes the method call to the data source' do
+      people_mapping.change(1, name: 'Johnny')
+      expect(people_mapping.get(1)[:name]).to eq('Johnny')
+    end
+  end
+  
+  describe '#remove' do
+    it 'passes the method call to the data source' do
+      people_mapping.remove(1)
+      expect { people_mapping.get(1) }.to raise_error(KeyError)
     end
   end
   
