@@ -41,14 +41,15 @@ You can create an entity by defining a class that includes `YADM::Entity`:
 class Person
   include YADM::Entity
   
-  attributes :first_name, :last_name, :email, :password
+  attributes :first_name, :last_name, :email, :password, :age
 end
 ```
 
 ### Repositories
 
 A repository is a module representing a collection of entities. It can fetch
-the objects from the data store and persist the changes back.
+the objects from the data store and persist the changes back. Here you can
+build complex queries to the data source.
 
 A repository is created as a module that includes `YADM::Repository`
 and specifies it's entity:
@@ -58,10 +59,20 @@ module People
   include YADM::Repository
   entity Person
   
-  class << self
-    def unnamed
-      with(first_name: nil, last_name: nil)
-    end
+  query :unnamed do
+    with { first_name.nil? && last_name.nil? }
+  end
+  
+  query :kids do
+    with { age < 12 }
+  end
+  
+  query :in_alphabetical_order do
+    ascending_by(:last_name).ascending_by(:first_name)
+  end
+  
+  query :oldest do |count = 10|
+    descending_by(:age).first(count)
   end
 end
 ```
@@ -101,6 +112,7 @@ YADM.setup do
       attribute :last_name,  String
       attribute :email,      String
       attribute :password,   String
+      attribute :age,        Integer
     end
   end
 end
@@ -113,7 +125,8 @@ john = Person.new(
   first_name: 'John',
   last_name:  'Smith',
   email:      'john@smiths.com',
-  password:   'secret'
+  password:   'secret',
+  age:        28
 )
 
 People.persist(john)
