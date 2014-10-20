@@ -79,6 +79,12 @@ RSpec.describe YADM::Repository do
     end
   end
   
+  describe '.count' do
+    it 'passes the method call to the mapping' do
+      expect(repository.count).to eq(1)
+    end
+  end
+  
   after(:each) do
     YADM.data_sources.delete(:memory_store)
   end

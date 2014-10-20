@@ -27,6 +27,10 @@ module YADM
       data_source.remove(collection, id)
     end
     
+    def count
+      data_source.count(collection)
+    end
+    
     module DSL
       def data_source(data_source_identifier = nil)
         if data_source_identifier.nil?

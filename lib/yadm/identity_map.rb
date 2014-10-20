@@ -35,5 +35,9 @@ module YADM
       data_source.remove(collection, id)
       map[collection].delete(id)
     end
+    
+    def count(collection)
+      data_source.count(collection)
+    end
   end
 end

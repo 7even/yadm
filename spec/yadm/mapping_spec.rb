@@ -51,6 +51,12 @@ RSpec.describe YADM::Mapping do
     end
   end
   
+  describe '#count' do
+    it 'passes the method call to the data source' do
+      expect(people_mapping.count).to eq(1)
+    end
+  end
+  
   describe YADM::Mapping::DSL do
     describe '#data_source' do
       let(:mapping) do

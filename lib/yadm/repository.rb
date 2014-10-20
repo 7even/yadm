@@ -25,6 +25,11 @@ module YADM
         mapping.remove(entity.id)
       end
       
+      def count
+        mapping.count
+      end
+      
+    private
       def wrap_object(attributes)
         entity_class.new(attributes)
       end

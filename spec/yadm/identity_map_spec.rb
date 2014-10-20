@@ -97,4 +97,10 @@ RSpec.describe YADM::IdentityMap do
       end
     end
   end
+  
+  describe '#count' do
+    it 'passes the method call to the data source' do
+      expect(subject.count(:people)).to eq(1)
+    end
+  end
 end
