@@ -67,8 +67,12 @@ module People
     with { age < 12 }
   end
   
+  query :older_than do |min_age|
+    with { age > min_age }
+  end
+  
   query :in_alphabetical_order do
-    ascending_by(:last_name).ascending_by(:first_name)
+    ascending_by { last_name }.ascending_by { first_name }
   end
   
   query :oldest do |count = 10|
