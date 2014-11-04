@@ -85,6 +85,19 @@ RSpec.describe YADM::Repository do
     end
   end
   
+  describe '.included' do
+    it 'creates a Query class under the repository namespace' do
+      expect(repository.const_get(:Query)).to be_a(Class)
+      expect(repository.const_get(:Query).repository).to eq(repository)
+    end
+  end
+  
+  describe '.default_query' do
+    it 'returns an empty instance of the Query class' do
+      expect(repository.default_query).to be_a(repository.const_get(:Query))
+    end
+  end
+  
   after(:each) do
     YADM.data_sources.delete(:memory_store)
   end

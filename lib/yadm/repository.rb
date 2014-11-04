@@ -2,8 +2,19 @@ module YADM
   module Repository
     class << self
       def included(including_class)
+        including_class.const_set(:Query, query_class_for(including_class))
+        
         including_class.extend(ClassMethods)
         including_class.extend(DSL)
+      end
+      
+    private
+      def query_class_for(repository)
+        Class.new do
+          define_singleton_method :repository do
+            repository
+          end
+        end
       end
     end
     
@@ -27,6 +38,10 @@ module YADM
       
       def count
         mapping.count
+      end
+      
+      def default_query
+        const_get(:Query).new
       end
       
     private
