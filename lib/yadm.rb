@@ -5,6 +5,7 @@ require 'yadm/identity_map'
 require 'yadm/mapping'
 require 'yadm/mapper'
 require 'yadm/repository'
+require 'yadm/criteria'
 
 module YADM
   class << self

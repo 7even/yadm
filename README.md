@@ -60,7 +60,7 @@ module People
   entity Person
   
   query :unnamed do
-    with { first_name.nil? && last_name.nil? }
+    with { first_name.nil? & last_name.nil? }
   end
   
   query :kids do
