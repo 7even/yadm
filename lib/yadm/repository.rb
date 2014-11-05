@@ -41,7 +41,7 @@ module YADM
       end
       
       def default_query
-        const_get(:Query).new
+        query_class.new
       end
       
     private
@@ -51,6 +51,10 @@ module YADM
       
       def mapping
         YADM.mapper.mapping_for(self)
+      end
+      
+      def query_class
+        const_get(:Query)
       end
     end
     
