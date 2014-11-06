@@ -9,7 +9,11 @@ module YADM
       
       class << self
         def merge(first_order, second_order)
-          new(first_order.clauses + second_order.clauses)
+          if first_order && second_order
+            new(first_order.clauses + second_order.clauses)
+          else
+            [first_order, second_order].compact.first
+          end
         end
       end
       

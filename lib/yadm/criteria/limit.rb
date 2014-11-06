@@ -9,7 +9,11 @@ module YADM
       
       class << self
         def merge(first_limit, second_limit)
-          new(second_limit.limit)
+          if first_limit && second_limit
+            new(second_limit.limit) unless second_limit.limit.nil?
+          else
+            [first_limit, second_limit].compact.first
+          end
         end
       end
     end
