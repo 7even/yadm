@@ -9,13 +9,17 @@ module YADM
       
       class << self
         def merge(first_condition, second_condition)
-          expression = Expression.new(
-            first_condition.expression,
-            :&,
-            [second_condition.expression]
-          )
-          
-          new(expression)
+          if first_condition && second_condition
+            expression = Expression.new(
+              first_condition.expression,
+              :&,
+              [second_condition.expression]
+            )
+            
+            new(expression)
+          else
+            [first_condition, second_condition].compact.first
+          end
         end
       end
     end
