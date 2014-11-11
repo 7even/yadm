@@ -88,6 +88,7 @@ RSpec.describe YADM::Repository do
   describe '.included' do
     it 'creates a Query class under the repository namespace' do
       expect(repository.const_get(:Query)).to be_a(Class)
+      expect(repository.const_get(:Query).superclass).to eq(YADM::Query)
       expect(repository.const_get(:Query).repository).to eq(repository)
     end
   end
