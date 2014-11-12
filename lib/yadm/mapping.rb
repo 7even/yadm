@@ -7,12 +7,7 @@ module YADM
     end
     
     def get(id)
-      attribute_values = data_source.get(collection, id)
-      
-      attributes.each_with_object(Hash.new) do |(attr_name, attribute), hash|
-        raw_value = attribute_values[attr_name]
-        hash[attr_name] = attribute.coerce(raw_value)
-      end
+      coerce(data_source.get(collection, id))
     end
     
     def add(attributes)
@@ -29,6 +24,20 @@ module YADM
     
     def count
       data_source.count(collection)
+    end
+    
+    def send_query(query)
+      data_source.send_query(query).map do |attribute_values|
+        coerce(attribute_values)
+      end
+    end
+    
+  private
+    def coerce(attribute_values)
+      attributes.each_with_object(Hash.new) do |(attr_name, attribute), hash|
+        raw_value = attribute_values[attr_name]
+        hash[attr_name] = attribute.coerce(raw_value)
+      end
     end
     
     module DSL

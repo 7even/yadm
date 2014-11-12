@@ -97,7 +97,7 @@ RSpec.describe YADM::Repository do
     
     before(:each) do
       mapping = YADM.mapper.mapping_for(repository)
-      allow(mapping).to receive(:send_query).and_return(data)
+      allow(mapping).to receive(:send_query).with(query).and_return(data)
     end
     
     it 'gets the data from the mapping and wraps in an entity' do

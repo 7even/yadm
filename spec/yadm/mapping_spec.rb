@@ -57,6 +57,30 @@ RSpec.describe YADM::Mapping do
     end
   end
   
+  describe '#send_query' do
+    let(:query) { double('Query') }
+    
+    let(:data) do
+      [
+        { id: 1, name: 'John', age: '31' },
+        { id: 2, name: 'Jack', age: '42' }
+      ]
+    end
+    
+    before(:each) do
+      allow(identity_map).to receive(:send_query).with(query).and_return(data)
+    end
+    
+    it 'gets the data from the data source and coerces it' do
+      result = people_mapping.send_query(query)
+      
+      expect(result.first[:name]).to eq('John')
+      expect(result.first[:age]).to eq(31)
+      expect(result.last[:name]).to eq('Jack')
+      expect(result.last[:age]).to eq(42)
+    end
+  end
+  
   describe YADM::Mapping::DSL do
     describe '#data_source' do
       let(:mapping) do
