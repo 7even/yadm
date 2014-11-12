@@ -40,6 +40,12 @@ module YADM
         mapping.count
       end
       
+      def send_query(query)
+        mapping.send_query(query).map do |attributes|
+          wrap_object(attributes)
+        end
+      end
+      
       def default_query
         query_class.new
       end

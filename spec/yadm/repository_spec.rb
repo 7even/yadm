@@ -11,7 +11,7 @@ RSpec.describe YADM::Repository do
   let(:repository) do
     person = entity_class
     
-    Class.new do
+    Module.new do
       include YADM::Repository
       entity person
     end
@@ -82,6 +82,30 @@ RSpec.describe YADM::Repository do
   describe '.count' do
     it 'passes the method call to the mapping' do
       expect(repository.count).to eq(1)
+    end
+  end
+  
+  describe '.send_query' do
+    let(:query) { double('Query') }
+    
+    let(:data) do
+      [
+        { id: 1, first_name: 'John', last_name: 'Smith' },
+        { id: 2, first_name: 'Jack', last_name: 'Sparrow' }
+      ]
+    end
+    
+    before(:each) do
+      mapping = YADM.mapper.mapping_for(repository)
+      allow(mapping).to receive(:send_query).and_return(data)
+    end
+    
+    it 'gets the data from the mapping and wraps in an entity' do
+      result = repository.send_query(query)
+      
+      expect(result).to all(be_a(entity_class))
+      expect(result.first.last_name).to eq('Smith')
+      expect(result.last.first_name).to eq('Jack')
     end
   end
   
