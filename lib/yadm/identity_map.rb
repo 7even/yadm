@@ -39,5 +39,9 @@ module YADM
     def count(collection)
       data_source.count(collection)
     end
+    
+    def send_query(query)
+      data_source.send_query(query)
+    end
   end
 end
