@@ -1,10 +1,10 @@
-require 'yadm/adapters/memory_adapter'
+require 'yadm/adapters/memory'
 
 RSpec.describe YADM::Adapters do
   describe '.fetch' do
     context 'with a :memory parameter' do
       it 'returns MemoryAdapter' do
-        expect(subject.fetch(:memory)).to eq(YADM::Adapters::MemoryAdapter)
+        expect(subject.fetch(:memory)).to eq(YADM::Adapters::Memory)
       end
     end
     

@@ -1,4 +1,4 @@
-require 'yadm/adapters/memory_adapter'
+require 'yadm/adapters/memory'
 
 RSpec.describe YADM::Repository do
   let(:entity_class) do

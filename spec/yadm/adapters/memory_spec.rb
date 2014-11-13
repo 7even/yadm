@@ -1,6 +1,6 @@
-require 'yadm/adapters/memory_adapter'
+require 'yadm/adapters/memory'
 
-RSpec.describe YADM::Adapters::MemoryAdapter do
+RSpec.describe YADM::Adapters::Memory do
   let(:person_attributes) do
     { name: 'John', email: 'john@example.com' }
   end

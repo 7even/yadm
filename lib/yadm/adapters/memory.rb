@@ -1,6 +1,6 @@
 module YADM
   module Adapters
-    class MemoryAdapter
+    class Memory
       attr_reader :collections
       private :collections
       

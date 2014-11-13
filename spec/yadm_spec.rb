@@ -1,4 +1,4 @@
-require 'yadm/adapters/memory_adapter'
+require 'yadm/adapters/memory'
 
 RSpec.describe YADM do
   describe '.setup' do
@@ -23,7 +23,7 @@ RSpec.describe YADM do
       data_source = YADM.data_sources[:memory_store]
       
       expect(data_source).to be_a(YADM::IdentityMap)
-      expect(data_source.send(:data_source)).to be_a(YADM::Adapters::MemoryAdapter)
+      expect(data_source.send(:data_source)).to be_a(YADM::Adapters::Memory)
     end
   end
   

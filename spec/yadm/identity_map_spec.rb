@@ -1,7 +1,7 @@
-require 'yadm/adapters/memory_adapter'
+require 'yadm/adapters/memory'
 
 RSpec.describe YADM::IdentityMap do
-  let(:data_source) { YADM::Adapters::MemoryAdapter.new }
+  let(:data_source) { YADM::Adapters::Memory.new }
   
   before(:each) do
     data_source.add(:people, name: 'John')

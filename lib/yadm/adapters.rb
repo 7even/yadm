@@ -9,7 +9,7 @@ module YADM
       
     private
       def class_name_for(name)
-        name.to_s.split('_').map(&:capitalize).join + 'Adapter'
+        name.to_s.split('_').map(&:capitalize).join
       end
     end
   end
