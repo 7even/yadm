@@ -100,7 +100,7 @@ RSpec.describe YADM::Repository do
       allow(mapping).to receive(:send_query).with(query).and_return(data)
     end
     
-    it 'gets the data from the mapping and wraps in an entity' do
+    it 'gets the data from the mapping and wraps it in entities' do
       result = repository.send_query(query)
       
       expect(result).to all(be_a(entity_class))
