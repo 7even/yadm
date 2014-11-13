@@ -5,7 +5,7 @@ RSpec.describe YADM::Adapters::Memory do
     { name: 'John', email: 'john@example.com' }
   end
   
-  describe '.get' do
+  describe '#get' do
     before(:each) do
       subject.add(:people, person_attributes)
     end
@@ -25,7 +25,7 @@ RSpec.describe YADM::Adapters::Memory do
     end
   end
   
-  describe '.add' do
+  describe '#add' do
     it 'adds a new record' do
       expect {
         subject.add(:people, person_attributes)
@@ -49,7 +49,7 @@ RSpec.describe YADM::Adapters::Memory do
     end
   end
   
-  describe '.change' do
+  describe '#change' do
     before(:each) do
       subject.add(:people, person_attributes)
     end
@@ -61,7 +61,7 @@ RSpec.describe YADM::Adapters::Memory do
     end
   end
   
-  describe '.remove' do
+  describe '#remove' do
     before(:each) do
       subject.add(:people, person_attributes)
     end
