@@ -73,6 +73,14 @@ module YADM
           end
         end
         
+        def order(dataset, order)
+          if order.nil?
+            dataset
+          else
+            dataset.sort { |*objects| compare(objects, order.clauses) }
+          end
+        end
+        
       private
         def next_id
           id_sequence.next
@@ -90,6 +98,22 @@ module YADM
         
         def matches?(object, expression)
           !!object_eval(object, expression)
+        end
+        
+        def compare(objects, clauses)
+          clauses.inject(0) do |comparison, clause|
+            return comparison unless comparison.zero?
+            
+            values = objects.map do |object|
+              object_eval(object, clause.expression)
+            end
+            
+            if clause.asc?
+              values.first <=> values.last
+            else
+              values.last <=> values.first
+            end
+          end
         end
         
         def object_eval(object, node)

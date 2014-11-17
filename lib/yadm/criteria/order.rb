@@ -21,8 +21,16 @@ module YADM
         attr_reader :type, :expression
         
         def initialize(type, expression)
-          @type       = type
+          @type = type.to_sym
           @expression = expression
+        end
+        
+        def asc?
+          type == :asc
+        end
+        
+        def desc?
+          type == :desc
         end
       end
     end

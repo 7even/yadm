@@ -95,5 +95,33 @@ RSpec.describe YADM::Adapters::Memory do
         expect(result.last[:title]).to eq('Third post')
       end
     end
+    
+    describe '#order' do
+      before(:each) do
+        now = Time.now
+        
+        subject.add(name: 'Past',     created_at: now - 5)
+        subject.add(name: 'Future',   created_at: now + 5)
+        subject.add(name: 'Present',  created_at: now)
+        subject.add(name: 'Pre-past', created_at: now - 5)
+      end
+      
+      let(:order) do
+        created_at = YADM::Criteria::Expression::Attribute.new(:created_at)
+        timestamp_clause = YADM::Criteria::Order::Clause.new(:asc, created_at)
+        
+        id = YADM::Criteria::Expression::Attribute.new(:id)
+        id_clause = YADM::Criteria::Order::Clause.new(:desc, id)
+        
+        YADM::Criteria::Order.new([timestamp_clause, id_clause])
+      end
+      
+      it 'returns records in the specified order' do
+        result = subject.order(subject.all, order)
+        names  = result.map { |record| record[:name] }
+        
+        expect(names).to eq(%w(Pre-past Past Present Future))
+      end
+    end
   end
 end
