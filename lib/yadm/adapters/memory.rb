@@ -61,6 +61,18 @@ module YADM
           objects.count
         end
         
+        def all
+          objects.values.dup
+        end
+        
+        def filter(dataset, condition)
+          if condition.nil?
+            dataset
+          else
+            dataset.select { |object| matches?(object, condition.expression) }
+          end
+        end
+        
       private
         def next_id
           id_sequence.next
@@ -73,6 +85,24 @@ module YADM
               id += 1
               yielder.yield id
             end
+          end
+        end
+        
+        def matches?(object, expression)
+          !!object_eval(object, expression)
+        end
+        
+        def object_eval(object, node)
+          case node
+          when Criteria::Expression
+            receiver  = object_eval(object, node.receiver)
+            arguments = node.arguments.map { |arg| object_eval(object, arg) }
+            
+            receiver.send(node.method_name, *arguments)
+          when Criteria::Expression::Attribute
+            object[node.name]
+          else
+            node
           end
         end
       end

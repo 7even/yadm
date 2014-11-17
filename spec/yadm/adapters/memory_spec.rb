@@ -72,4 +72,28 @@ RSpec.describe YADM::Adapters::Memory do
       }.to change { subject.count(:people) }.by(-1)
     end
   end
+  
+  describe YADM::Adapters::Memory::Collection do
+    describe '#filter' do
+      before(:each) do
+        subject.add(title: 'First post',  comments_count: 14)
+        subject.add(title: 'Second post', comments_count: 7)
+        subject.add(title: 'Third post',  comments_count: 17)
+      end
+      
+      let(:condition) do
+        attribute = YADM::Criteria::Expression::Attribute.new(:comments_count)
+        expression = YADM::Criteria::Expression.new(attribute, :>, [10])
+        YADM::Criteria::Condition.new(expression)
+      end
+      
+      it 'returns all records matching the condition' do
+        result = subject.filter(subject.all, condition)
+        
+        expect(result.count).to eq(2)
+        expect(result.first[:title]).to eq('First post')
+        expect(result.last[:title]).to eq('Third post')
+      end
+    end
+  end
 end
