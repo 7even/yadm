@@ -123,5 +123,23 @@ RSpec.describe YADM::Adapters::Memory do
         expect(names).to eq(%w(Pre-past Past Present Future))
       end
     end
+    
+    describe '#limit' do
+      before(:each) do
+        subject.add(name: 'First')
+        subject.add(name: 'Second')
+        subject.add(name: 'Third')
+      end
+      
+      let(:limit) { YADM::Criteria::Limit.new(2) }
+      
+      it 'returns first N records' do
+        result = subject.limit(subject.all, limit)
+        
+        expect(result.count).to eq(2)
+        expect(result.first[:name]).to eq('First')
+        expect(result.last[:name]).to eq('Second')
+      end
+    end
   end
 end

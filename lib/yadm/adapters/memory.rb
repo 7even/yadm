@@ -81,6 +81,14 @@ module YADM
           end
         end
         
+        def limit(dataset, limit)
+          if limit.nil? || limit.limit.nil?
+            dataset
+          else
+            dataset.take(limit.limit)
+          end
+        end
+        
       private
         def next_id
           id_sequence.next
