@@ -61,6 +61,8 @@ module People
   
   query :unnamed do
     with { first_name.nil? & last_name.nil? }
+    # OR
+    without { first_name }.without { last_name }
   end
   
   query :kids do
