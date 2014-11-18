@@ -68,7 +68,7 @@ RSpec.describe YADM::Mapping do
     end
     
     before(:each) do
-      allow(identity_map).to receive(:send_query).with(query).and_return(data)
+      allow(identity_map).to receive(:send_query).with(:people, query).and_return(data)
     end
     
     it 'gets the data from the data source and coerces it' do

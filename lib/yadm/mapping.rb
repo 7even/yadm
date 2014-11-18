@@ -27,7 +27,7 @@ module YADM
     end
     
     def send_query(query)
-      data_source.send_query(query).map do |attribute_values|
+      data_source.send_query(collection, query).map do |attribute_values|
         coerce(attribute_values)
       end
     end

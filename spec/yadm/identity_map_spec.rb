@@ -109,11 +109,11 @@ RSpec.describe YADM::IdentityMap do
     let(:data)  { double('Data') }
     
     before(:each) do
-      allow(data_source).to receive(:send_query).with(query).and_return(data)
+      allow(data_source).to receive(:send_query).with(:people, query).and_return(data)
     end
     
     it 'passes the method call to the data source' do
-      expect(subject.send_query(query)).to eq(data)
+      expect(subject.send_query(:people, query)).to eq(data)
     end
   end
 end
