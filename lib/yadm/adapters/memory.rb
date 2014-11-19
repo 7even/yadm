@@ -31,6 +31,10 @@ module YADM
         collections[collection_name].count
       end
       
+      def send_query(collection_name, query)
+        collections[collection_name].send_query(query)
+      end
+      
       class Collection
         attr_reader :objects
         private :objects
@@ -59,6 +63,12 @@ module YADM
         
         def count
           objects.count
+        end
+        
+        def send_query(query)
+          result = filter(all, query.criteria.condition)
+          result = order(result, query.criteria.order)
+          result = limit(result, query.criteria.limit)
         end
         
         def all

@@ -74,6 +74,35 @@ RSpec.describe YADM::Adapters::Memory do
   end
   
   describe YADM::Adapters::Memory::Collection do
+    describe '#send_query' do
+      let(:criteria) do
+        YADM::Criteria.new(
+          condition: :some_condition,
+          order: :some_order,
+          limit: :some_limit
+        )
+      end
+      
+      let(:query) { double('Query', criteria: criteria) }
+      
+      let(:objects) { %i(first second third fourth) }
+      let(:filtered_objects) { %i(first third fourth) }
+      let(:ordered_objects) { %i(third first fourth) }
+      let(:limited_objects) { %i(third first) }
+      
+      before(:each) do
+        allow(subject).to receive(:all).and_return(objects)
+      end
+      
+      it 'returns the transformed objects collection' do
+        expect(subject).to receive(:filter).with(objects, :some_condition).and_return(filtered_objects)
+        expect(subject).to receive(:order).with(filtered_objects, :some_order).and_return(ordered_objects)
+        expect(subject).to receive(:limit).with(ordered_objects, :some_limit).and_return(limited_objects)
+        
+        expect(subject.send_query(query)).to eq(limited_objects)
+      end
+    end
+    
     describe '#filter' do
       before(:each) do
         subject.add(title: 'First post',  comments_count: 14)
