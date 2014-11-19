@@ -11,7 +11,7 @@ module YADM
     private
       def query_class_for(repository)
         Class.new(YADM::Query) do
-          define_singleton_method :repository do
+          define_method :repository do
             repository
           end
         end
