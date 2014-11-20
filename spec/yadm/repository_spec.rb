@@ -85,6 +85,19 @@ RSpec.describe YADM::Repository do
     end
   end
   
+  describe '#each' do
+    let(:default_query) { double('Default query') }
+    
+    before(:each) do
+      allow(repository).to receive(:default_query).and_return(default_query)
+    end
+    
+    it 'delegates to default_query' do
+      expect(default_query).to receive(:each)
+      repository.each
+    end
+  end
+  
   describe '.send_query' do
     let(:query) { double('Query') }
     

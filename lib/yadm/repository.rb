@@ -19,6 +19,8 @@ module YADM
     end
     
     module ClassMethods
+      include Enumerable
+      
       def find(id)
         wrap_object(mapping.get(id))
       end
@@ -34,6 +36,10 @@ module YADM
       
       def delete(entity)
         mapping.remove(entity.id)
+      end
+      
+      def each(&block)
+        default_query.each(&block)
       end
       
       def count
