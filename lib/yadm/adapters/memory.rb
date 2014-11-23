@@ -66,36 +66,36 @@ module YADM
         end
         
         def send_query(query)
-          result = filter(all, query.criteria.condition)
-          result = order(result, query.criteria.order)
-          result = limit(result, query.criteria.limit)
+          result = filter(all, query.criteria.condition, query.arguments)
+          result = order(result, query.criteria.order, query.arguments)
+          result = limit(result, query.criteria.limit, query.arguments)
         end
         
         def all
           objects.values.dup
         end
         
-        def filter(dataset, condition)
+        def filter(dataset, condition, arguments)
           if condition.nil?
             dataset
           else
-            dataset.select { |object| matches?(object, condition.expression) }
+            dataset.select { |object| matches?(object, condition.expression, arguments) }
           end
         end
         
-        def order(dataset, order)
+        def order(dataset, order, arguments)
           if order.nil?
             dataset
           else
-            dataset.sort { |*objects| compare(objects, order.clauses) }
+            dataset.sort { |*objects| compare(objects, order.clauses, arguments) }
           end
         end
         
-        def limit(dataset, limit)
+        def limit(dataset, limit, arguments)
           if limit.nil? || limit.limit.nil?
             dataset
           else
-            dataset.take(limit.limit)
+            take(dataset, limit.limit, arguments)
           end
         end
         
@@ -114,16 +114,16 @@ module YADM
           end
         end
         
-        def matches?(object, expression)
-          !!object_eval(object, expression)
+        def matches?(object, expression, arguments)
+          !!object_eval(object, expression, arguments)
         end
         
-        def compare(objects, clauses)
+        def compare(objects, clauses, arguments)
           clauses.inject(0) do |comparison, clause|
             return comparison unless comparison.zero?
             
             values = objects.map do |object|
-              object_eval(object, clause.expression)
+              object_eval(object, clause.expression, arguments)
             end
             
             if clause.asc?
@@ -134,18 +134,34 @@ module YADM
           end
         end
         
-        def object_eval(object, node)
+        def take(objects, limit, arguments)
+          number = if limit.is_a?(YADM::Criteria::Expression::Argument)
+            extract_argument(arguments, limit)
+          else
+            limit
+          end
+          
+          objects.take(number)
+        end
+        
+        def object_eval(object, node, arguments)
           case node
           when Criteria::Expression
-            receiver  = object_eval(object, node.receiver)
-            arguments = node.arguments.map { |arg| object_eval(object, arg) }
+            receiver  = object_eval(object, node.receiver, arguments)
+            arguments = node.arguments.map { |arg| object_eval(object, arg, arguments) }
             
             receiver.send(node.method_name, *arguments)
           when Criteria::Expression::Attribute
             object[node.name]
+          when Criteria::Expression::Argument
+            extract_argument(arguments, node)
           else
             node
           end
+        end
+        
+        def extract_argument(arguments, node)
+          arguments[node.group][node.index]
         end
       end
     end
