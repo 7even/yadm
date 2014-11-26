@@ -9,11 +9,21 @@ module YADM
         @arguments   = arguments
       end
       
+      def ==(other)
+        %i(receiver method_name arguments).all? do |method|
+          other.respond_to?(method) && send(method) == other.send(method)
+        end
+      end
+      
       class Attribute
         attr_reader :name
         
         def initialize(name)
           @name = name
+        end
+        
+        def ==(other)
+          other.respond_to?(:name) && name == other.name
         end
       end
       
@@ -23,6 +33,12 @@ module YADM
         def initialize(group, index)
           @group = group
           @index = index
+        end
+        
+        def ==(other)
+          %i(group index).all? do |method|
+            other.respond_to?(method) && send(method) == other.send(method)
+          end
         end
       end
     end

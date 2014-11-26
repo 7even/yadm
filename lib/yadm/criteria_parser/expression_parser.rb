@@ -15,7 +15,17 @@ module YADM
         Attribute.new(method_name)
       end
       
+      module Operand
+        %i(== != < > <= >= + - * / & |).each do |symbol|
+          define_method(symbol) do |arg|
+            Expression.new(self, symbol, [arg])
+          end
+        end
+      end
+      
       class Expression
+        include Operand
+        
         attr_reader :receiver, :method_name, :arguments
         
         def initialize(receiver, method_name, arguments)
@@ -44,16 +54,12 @@ module YADM
       end
       
       class Attribute
+        include Operand
+        
         attr_reader :name
         
         def initialize(name)
           @name = name
-        end
-        
-        %i(== != < > + - * / &).each do |symbol|
-          define_method(symbol) do |arg|
-            Expression.new(self, symbol, [arg])
-          end
         end
         
         def result

@@ -1,23 +1,55 @@
+def build_expression(receiver, method, argument)
+  YADM::Criteria::Expression.new(receiver, method, [argument])
+end
+
+def build_attribute(name)
+  YADM::Criteria::Expression::Attribute.new(name)
+end
+
 RSpec.describe YADM::CriteriaParser::ExpressionParser do
-  let(:block) do
-    proc do
-      age > 12
-    end
-  end
-  
   subject { described_class.new(block) }
   
   describe '#result' do
     let(:result) { subject.result }
     
-    it 'returns a Criteria::Expression' do
-      expect(result).to be_a(YADM::Criteria::Expression)
+    context 'with a simple block' do
+      let(:block) do
+        proc do
+          age > 12
+        end
+      end
       
-      expect(result.receiver).to be_a(YADM::Criteria::Expression::Attribute)
-      expect(result.receiver.name).to eq(:age)
+      let(:expected_expression) do
+        build_expression(build_attribute(:age), :>, 12)
+      end
       
-      expect(result.method_name).to eq(:>)
-      expect(result.arguments.first).to eq(12)
+      it 'returns a Criteria::Expression' do
+        expect(result).to eq(expected_expression)
+      end
+    end
+    
+    context 'with a nested expression in the block' do
+      let(:block) do
+        proc do
+          (age >= 18) & (age <= 27) & (sex == 'male')
+        end
+      end
+      
+      let(:expected_expression) do
+        build_expression(
+          build_expression(
+            build_expression(build_attribute(:age), :>=, 18),
+            :&,
+            build_expression(build_attribute(:age), :<=, 27)
+          ),
+          :&,
+          build_expression(build_attribute(:sex), :==, 'male')
+        )
+      end
+      
+      it 'returns a nested Criteria::Expression' do
+        expect(result).to eq(expected_expression)
+      end
     end
   end
 end
