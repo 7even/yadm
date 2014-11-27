@@ -20,5 +20,11 @@ module YADM
         limit:     Limit.merge(limit, other_criteria.limit)
       )
     end
+    
+    def ==(other)
+      %i(condition order limit).all? do |method|
+        other.respond_to?(method) && send(method) == other.send(method)
+      end
+    end
   end
 end

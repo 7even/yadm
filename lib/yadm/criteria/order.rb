@@ -7,6 +7,10 @@ module YADM
         @clauses = clauses
       end
       
+      def ==(other)
+        other.respond_to?(:clauses) && clauses == other.clauses
+      end
+      
       class << self
         def merge(first_order, second_order)
           if first_order && second_order
@@ -31,6 +35,12 @@ module YADM
         
         def desc?
           type == :desc
+        end
+        
+        def ==(other)
+          %i(type expression).all? do |method|
+            other.respond_to?(method) && send(method) == other.send(method)
+          end
         end
       end
     end

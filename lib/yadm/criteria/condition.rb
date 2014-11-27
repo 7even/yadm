@@ -7,6 +7,10 @@ module YADM
         @expression = expression
       end
       
+      def ==(other)
+        other.respond_to?(:expression) && expression == other.expression
+      end
+      
       class << self
         def merge(first_condition, second_condition)
           if first_condition && second_condition

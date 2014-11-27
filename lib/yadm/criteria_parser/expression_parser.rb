@@ -1,5 +1,5 @@
 module YADM
-  module CriteriaParser
+  class CriteriaParser
     class ExpressionParser
       attr_reader :block
       
@@ -13,6 +13,12 @@ module YADM
       
       def method_missing(method_name, *args, &block)
         Attribute.new(method_name)
+      end
+      
+      class << self
+        def parse(block)
+          new(block).result
+        end
       end
       
       module Operand

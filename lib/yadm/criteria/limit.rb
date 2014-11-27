@@ -7,6 +7,10 @@ module YADM
         @limit = limit
       end
       
+      def ==(other)
+        other.respond_to?(:limit) && limit == other.limit
+      end
+      
       class << self
         def merge(first_limit, second_limit)
           if first_limit && second_limit
