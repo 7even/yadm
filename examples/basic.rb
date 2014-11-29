@@ -11,6 +11,14 @@ end
 module People
   include YADM::Repository
   entity Person
+  
+  criteria :older_than do |min_age|
+    with { age > min_age }
+  end
+  
+  criteria :in_alphabetical_order do
+    ascending_by { last_name }.ascending_by { first_name }
+  end
 end
 
 YADM.setup do
