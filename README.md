@@ -59,25 +59,25 @@ module People
   include YADM::Repository
   entity Person
   
-  query :unnamed do
+  criteria :unnamed do
     with { first_name.nil? & last_name.nil? }
     # OR
     without { first_name }.without { last_name }
   end
   
-  query :kids do
+  criteria :kids do
     with { age < 12 }
   end
   
-  query :older_than do |min_age|
+  criteria :older_than do |min_age|
     with { age > min_age }
   end
   
-  query :in_alphabetical_order do
+  criteria :in_alphabetical_order do
     ascending_by { last_name }.ascending_by { first_name }
   end
   
-  query :oldest do |count = 10|
+  criteria :oldest do |count|
     descending_by(:age).first(count)
   end
 end

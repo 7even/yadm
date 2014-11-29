@@ -152,7 +152,9 @@ module YADM
             
             receiver.send(node.method_name, *arguments)
           when Criteria::Expression::Attribute
-            object[node.name]
+            object.fetch(node.name) do
+              raise ArgumentError, "#{node.name.inspect} attribute not found."
+            end
           when Criteria::Expression::Argument
             extract_argument(arguments, node)
           else

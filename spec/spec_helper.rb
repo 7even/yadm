@@ -1,5 +1,8 @@
 require 'yadm'
 
+support_glob = Pathname.new('../support/*.rb').expand_path(__FILE__)
+Dir.glob(support_glob) { |path| require(path) }
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     # be_bigger_than(2).and_smaller_than(4).description
@@ -17,4 +20,6 @@ RSpec.configure do |config|
   
   config.order = :random
   Kernel.srand config.seed
+  
+  config.include CriteriaHelpers
 end

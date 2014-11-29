@@ -122,6 +122,39 @@ RSpec.describe YADM::Repository do
     end
   end
   
+  describe '.criteria' do
+    before(:each) do
+      repository.class_eval do
+        criteria :kids do
+          with { age < 12 }
+        end
+        
+        criteria :older_than do |min_age|
+          with { age > min_age }
+        end
+      end
+    end
+    
+    let(:expected_criteria) do
+      build_criteria(
+        condition: build_condition(
+          build_expression(
+            build_expression(build_attribute(:age), :<, 12),
+            :&,
+            build_expression(build_attribute(:age), :>, build_argument(:older_than, 0))
+          )
+        )
+      )
+    end
+    
+    it 'creates a method both in the repository and in the Query class' do
+      query = repository.kids.older_than(10)
+      
+      expect(query.criteria).to eq(expected_criteria)
+      expect(query.arguments).to eq(kids: [], older_than: [10])
+    end
+  end
+  
   describe '.included' do
     it 'creates a Query class under the repository namespace' do
       expect(repository.const_get(:Query)).to be_a(Class)

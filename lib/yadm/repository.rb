@@ -73,6 +73,20 @@ module YADM
     module DSL
       
     private
+      def criteria(name, &block)
+        criteria = CriteriaParser.parse(block, name)
+        
+        query_class.class_eval do
+          define_method(name) do |*args|
+            merge(criteria, name => args)
+          end
+        end
+        
+        define_singleton_method(name) do |*args|
+          default_query.public_send(name, *args)
+        end
+      end
+      
       def entity(entity_class)
         @entity_class = entity_class
       end

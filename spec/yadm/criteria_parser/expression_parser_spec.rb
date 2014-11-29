@@ -1,11 +1,3 @@
-def build_expression(receiver, method, argument)
-  YADM::Criteria::Expression.new(receiver, method, [argument])
-end
-
-def build_attribute(name)
-  YADM::Criteria::Expression::Attribute.new(name)
-end
-
 RSpec.describe YADM::CriteriaParser::ExpressionParser do
   subject { described_class.new(block) }
   
