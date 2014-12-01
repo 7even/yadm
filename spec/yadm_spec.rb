@@ -2,13 +2,9 @@ require 'yadm/adapters/memory'
 
 RSpec.describe YADM do
   describe '.setup' do
-    it "evaluates the block in context of YADM itself" do
-      module_name = nil
-      YADM.setup do
-        module_name = name
-      end
-      
-      expect(module_name).to eq('YADM')
+    it 'evaluates the block in context of YADM itself' do
+      yadm = YADM.setup { self }
+      expect(yadm).to eq(YADM)
     end
   end
   
@@ -29,11 +25,7 @@ RSpec.describe YADM do
   
   describe '.map' do
     it 'evaluates the block in context of the mapper' do
-      mapper = nil
-      YADM.map do
-        mapper = self
-      end
-      
+      mapper = YADM.map { self }
       expect(mapper).to be_a(YADM::Mapper)
     end
   end

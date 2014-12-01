@@ -15,8 +15,8 @@ module YADM
       instance_eval(&block) unless block.nil?
     end
     
-    def data_source(name, adapter:, &block)
-      data_source = Adapters.fetch(adapter).new(&block)
+    def data_source(name, adapter:, **connection_params)
+      data_source = Adapters.fetch(adapter).new(connection_params)
       data_sources[name] = IdentityMap.new(data_source)
     end
     
