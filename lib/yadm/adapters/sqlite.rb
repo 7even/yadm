@@ -30,6 +30,34 @@ module YADM
       def count(table_name)
         connection[table_name].count
       end
+      
+      def send_query(table_name, query)
+        result = filter(connection[table_name], query.criteria.condition)
+      end
+      
+      def filter(dataset, condition)
+        if condition.nil?
+          dataset
+        else
+          sequel_expression = sequelize(condition.expression)
+          dataset.where(sequel_expression)
+        end
+      end
+      
+    private
+      def sequelize(node)
+        case node
+        when Criteria::Expression
+          receiver  = sequelize(node.receiver)
+          arguments = node.arguments.map { |arg| sequelize(arg) }
+          
+          Sequel::SQL::ComplexExpression.new(node.method_name, receiver, *arguments)
+        when Criteria::Expression::Attribute
+          Sequel::SQL::Identifier.new(node.name)
+        else
+          node
+        end
+      end
     end
   end
 end

@@ -61,4 +61,47 @@ RSpec.describe YADM::Adapters::Sqlite do
       }.to change { subject.count(:people) }.by(-1)
     end
   end
+  
+  describe '#send_query' do
+    before(:each) do
+      connection.create_table :posts do
+        primary_key :id
+        
+        String  :title
+        Integer :comments_count
+        Date    :created_at
+      end
+      
+      now = Time.now
+      
+      [
+        ['First',  7,  now - 15],
+        ['Second', 10, now - 20],
+        ['Third',  4,  now - 10],
+        ['Fourth', 13, now]
+      ].each do |title, comments_count, created_at|
+        subject.add(
+          :posts,
+          title:          title,
+          comments_count: comments_count,
+          created_at:     created_at
+        )
+      end
+    end
+    
+    let(:criteria) do
+      build_criteria(
+        condition: build_condition(
+          build_expression(build_attribute(:comments_count), :<, 10)
+        )
+      )
+    end
+    
+    let(:query) { YADM::Query.new(criteria, {}) }
+    
+    it 'filters the records' do
+      data = subject.send_query(:posts, query)
+      expect(data.count).to eq(2)
+    end
+  end
 end
