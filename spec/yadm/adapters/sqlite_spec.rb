@@ -4,12 +4,10 @@ def setup_table
   connection.create_table :posts do
     primary_key :id
     
-    String  :title
-    Integer :comments_count
-    Date    :created_at
+    String   :title
+    Integer  :comments_count
+    Datetime :created_at
   end
-  
-  now = Time.now
   
   [
     ['First',  7,  now - 10],
@@ -28,6 +26,7 @@ end
 
 RSpec.describe YADM::Adapters::Sqlite do
   let(:connection) { subject.send(:connection) }
+  let(:now)        { Time.now }
   
   before(:each) do
     connection.create_table :people do
@@ -97,15 +96,27 @@ RSpec.describe YADM::Adapters::Sqlite do
       build_criteria(
         condition: build_condition(
           build_expression(build_attribute(:comments_count), :<, 10)
-        )
+        ),
+        order: build_order(
+          [
+            build_order_clause(:desc, build_attribute(:comments_count))
+          ]
+        ),
+        limit: build_limit(1)
       )
     end
     
     let(:query) { YADM::Query.new(criteria, {}) }
     
-    it 'filters the records' do
+    it 'filters, orders and limits the records' do
       data = subject.send_query(:posts, query)
-      expect(data.count).to eq(2)
+      
+      expect(data).to eq([
+        id:             1,
+        title:          'First',
+        comments_count: 7,
+        created_at:     now - 10
+      ])
     end
   end
   

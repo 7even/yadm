@@ -33,6 +33,10 @@ module YADM
       
       def send_query(table_name, query)
         result = filter(from(table_name), query.criteria.condition, query.arguments)
+        result = order(result, query.criteria.order, query.arguments)
+        result = limit(result, query.criteria.limit, query.arguments)
+        
+        result.to_a
       end
       
       def from(table_name)
