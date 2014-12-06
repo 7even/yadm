@@ -1,5 +1,31 @@
 require 'yadm/adapters/sqlite'
 
+def setup_table
+  connection.create_table :posts do
+    primary_key :id
+    
+    String  :title
+    Integer :comments_count
+    Date    :created_at
+  end
+  
+  now = Time.now
+  
+  [
+    ['First',  7,  now - 15],
+    ['Second', 10, now - 20],
+    ['Third',  4,  now - 10],
+    ['Fourth', 13, now]
+  ].each do |title, comments_count, created_at|
+    subject.add(
+    :posts,
+    title:          title,
+    comments_count: comments_count,
+    created_at:     created_at
+    )
+  end
+end
+
 RSpec.describe YADM::Adapters::Sqlite do
   let(:connection) { subject.send(:connection) }
   
@@ -64,29 +90,7 @@ RSpec.describe YADM::Adapters::Sqlite do
   
   describe '#send_query' do
     before(:each) do
-      connection.create_table :posts do
-        primary_key :id
-        
-        String  :title
-        Integer :comments_count
-        Date    :created_at
-      end
-      
-      now = Time.now
-      
-      [
-        ['First',  7,  now - 15],
-        ['Second', 10, now - 20],
-        ['Third',  4,  now - 10],
-        ['Fourth', 13, now]
-      ].each do |title, comments_count, created_at|
-        subject.add(
-          :posts,
-          title:          title,
-          comments_count: comments_count,
-          created_at:     created_at
-        )
-      end
+      setup_table
     end
     
     let(:criteria) do
@@ -102,6 +106,26 @@ RSpec.describe YADM::Adapters::Sqlite do
     it 'filters the records' do
       data = subject.send_query(:posts, query)
       expect(data.count).to eq(2)
+    end
+  end
+  
+  describe '#filter' do
+    before(:each) do
+      setup_table
+    end
+    
+    let(:condition) do
+      build_condition(
+        build_expression(build_attribute(:comments_count), :<, 10)
+      )
+    end
+    
+    it 'returns a dataset with the condition' do
+      result = subject.filter(subject.from(:posts), condition, {})
+      
+      expect(result.count).to eq(2)
+      expect(result.to_a.first[:title]).to eq('First')
+      expect(result.to_a.last[:title]).to eq('Third')
     end
   end
   

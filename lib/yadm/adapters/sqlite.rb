@@ -32,7 +32,11 @@ module YADM
       end
       
       def send_query(table_name, query)
-        result = filter(connection[table_name], query.criteria.condition, query.arguments)
+        result = filter(from(table_name), query.criteria.condition, query.arguments)
+      end
+      
+      def from(table_name)
+        connection[table_name]
       end
       
       def filter(dataset, condition, arguments)
