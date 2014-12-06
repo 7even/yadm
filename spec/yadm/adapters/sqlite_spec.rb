@@ -12,7 +12,7 @@ def setup_table
   now = Time.now
   
   [
-    ['First',  7,  now - 15],
+    ['First',  7,  now - 10],
     ['Second', 10, now - 20],
     ['Third',  4,  now - 10],
     ['Fourth', 13, now]
@@ -126,6 +126,28 @@ RSpec.describe YADM::Adapters::Sqlite do
       expect(result.count).to eq(2)
       expect(result.to_a.first[:title]).to eq('First')
       expect(result.to_a.last[:title]).to eq('Third')
+    end
+  end
+  
+  describe '#order' do
+    before(:each) do
+      setup_table
+    end
+    
+    let(:order) do
+      build_order(
+        [
+          build_order_clause(:desc, build_attribute(:created_at)),
+          build_order_clause(:asc, build_attribute(:comments_count))
+        ]
+      )
+    end
+    
+    it 'returns a dataset with the specified order' do
+      result = subject.order(subject.from(:posts), order, {})
+      titles = result.map { |record| record[:title] }
+      
+      expect(titles).to eq(%w(Fourth Third First Second))
     end
   end
   

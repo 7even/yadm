@@ -48,6 +48,17 @@ module YADM
         end
       end
       
+      def order(dataset, order, arguments)
+        if order.nil?
+          dataset
+        else
+          order.clauses.inject(dataset) do |dataset, clause|
+            sequel_expression = sequelize(clause.expression, arguments)
+            dataset.order_more(sequel_expression.send(clause.type))
+          end
+        end
+      end
+      
     private
       def sequelize(node, arguments)
         self.class.sequelize(node, arguments)
