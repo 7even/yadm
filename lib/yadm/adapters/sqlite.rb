@@ -46,16 +46,33 @@ module YADM
       
     private
       def sequelize(node)
-        case node
-        when Criteria::Expression
-          receiver  = sequelize(node.receiver)
-          arguments = node.arguments.map { |arg| sequelize(arg) }
-          
-          Sequel::SQL::ComplexExpression.new(node.method_name, receiver, *arguments)
-        when Criteria::Expression::Attribute
-          Sequel::SQL::Identifier.new(node.name)
-        else
-          node
+        self.class.sequelize(node)
+      end
+      
+      class << self
+        def sequelize(node)
+          case node
+          when Criteria::Expression
+            operator  = sequelize_operator(node.method_name)
+            receiver  = sequelize(node.receiver)
+            arguments = node.arguments.map { |arg| sequelize(arg) }
+            
+            Sequel::SQL::ComplexExpression.new(operator, receiver, *arguments)
+          when Criteria::Expression::Attribute
+            Sequel::SQL::Identifier.new(node.name)
+          else
+            node
+          end
+        end
+        
+      private
+        def sequelize_operator(operator)
+          case operator
+          when :== then :'='
+          when :&  then :AND
+          when :|  then :OR
+          else operator
+          end
         end
       end
     end
