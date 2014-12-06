@@ -59,9 +59,27 @@ module YADM
         end
       end
       
+      def limit(dataset, limit, arguments)
+        if limit.nil? || limit.limit.nil?
+          dataset
+        else
+          take(dataset, limit.limit, arguments)
+        end
+      end
+      
     private
       def sequelize(node, arguments)
         self.class.sequelize(node, arguments)
+      end
+      
+      def take(dataset, limit, arguments)
+        number = if limit.is_a?(YADM::Criteria::Expression::Argument)
+          limit.fetch_from(arguments)
+        else
+          limit
+        end
+        
+        dataset.limit(number)
       end
       
       class << self

@@ -151,6 +151,28 @@ RSpec.describe YADM::Adapters::Sqlite do
     end
   end
   
+  describe '#limit' do
+    before(:each) do
+      setup_table
+    end
+    
+    let(:limit) { build_limit(2) }
+    
+    it 'returns a dataset with the specified limit' do
+      result = subject.limit(subject.from(:posts), limit, {})
+      expect(result.count).to eq(2)
+    end
+    
+    context 'with arguments' do
+      let(:limit) { build_limit(build_argument(:first, 0)) }
+      
+      it 'returns a dataset with the specified limit' do
+        result = subject.limit(subject.from(:posts), limit, first: [3])
+        expect(result.count).to eq(3)
+      end
+    end
+  end
+  
   describe '.sequelize' do
     %i(< > <= >= + - * / !=).each do |operator|
       context "with '#{operator}' operator" do
