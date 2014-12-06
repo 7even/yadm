@@ -32,34 +32,36 @@ module YADM
       end
       
       def send_query(table_name, query)
-        result = filter(connection[table_name], query.criteria.condition)
+        result = filter(connection[table_name], query.criteria.condition, query.arguments)
       end
       
-      def filter(dataset, condition)
+      def filter(dataset, condition, arguments)
         if condition.nil?
           dataset
         else
-          sequel_expression = sequelize(condition.expression)
+          sequel_expression = sequelize(condition.expression, arguments)
           dataset.where(sequel_expression)
         end
       end
       
     private
-      def sequelize(node)
-        self.class.sequelize(node)
+      def sequelize(node, arguments)
+        self.class.sequelize(node, arguments)
       end
       
       class << self
-        def sequelize(node)
+        def sequelize(node, arguments)
           case node
           when Criteria::Expression
             operator  = sequelize_operator(node.method_name)
-            receiver  = sequelize(node.receiver)
-            arguments = node.arguments.map { |arg| sequelize(arg) }
+            receiver  = sequelize(node.receiver, arguments)
+            arguments = node.arguments.map { |arg| sequelize(arg, arguments) }
             
             Sequel::SQL::ComplexExpression.new(operator, receiver, *arguments)
           when Criteria::Expression::Attribute
             Sequel::SQL::Identifier.new(node.name)
+          when Criteria::Expression::Argument
+            node.fetch_from(arguments)
           else
             node
           end

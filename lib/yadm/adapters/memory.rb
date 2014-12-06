@@ -136,7 +136,7 @@ module YADM
         
         def take(objects, limit, arguments)
           number = if limit.is_a?(YADM::Criteria::Expression::Argument)
-            extract_argument(arguments, limit)
+            limit.fetch_from(arguments)
           else
             limit
           end
@@ -156,14 +156,10 @@ module YADM
               raise ArgumentError, "#{node.name.inspect} attribute not found."
             end
           when Criteria::Expression::Argument
-            extract_argument(arguments, node)
+            node.fetch_from(arguments)
           else
             node
           end
-        end
-        
-        def extract_argument(arguments, node)
-          arguments[node.group][node.index]
         end
       end
     end

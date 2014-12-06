@@ -40,6 +40,10 @@ module YADM
             other.respond_to?(method) && send(method) == other.send(method)
           end
         end
+        
+        def fetch_from(values)
+          values[group][index]
+        end
       end
     end
   end
