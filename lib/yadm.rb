@@ -24,6 +24,10 @@ module YADM
       mapper.instance_eval(&block) unless block.nil?
     end
     
+    def migrate(data_source_name, &block)
+      data_sources.fetch(data_source_name).migrate(block)
+    end
+    
     def data_sources
       @data_sources ||= {}
     end

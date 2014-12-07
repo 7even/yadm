@@ -43,5 +43,9 @@ module YADM
     def send_query(collection, query)
       data_source.send_query(collection, query)
     end
+    
+    def migrate(block)
+      data_source.migrate(block)
+    end
   end
 end

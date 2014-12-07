@@ -71,6 +71,10 @@ module YADM
         end
       end
       
+      def migrate(block)
+        block.call(connection)
+      end
+      
     private
       def sequelize(node, arguments)
         self.class.sequelize(node, arguments)

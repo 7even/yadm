@@ -29,4 +29,17 @@ RSpec.describe YADM do
       expect(mapper).to be_a(YADM::Mapper)
     end
   end
+  
+  describe '.migrate' do
+    before(:each) do
+      YADM.data_sources[:test] = double('Data source')
+    end
+    
+    let(:block) { -> (arg) { arg } }
+    
+    it 'passes the method call to the specified data source' do
+      expect(YADM.data_sources[:test]).to receive(:migrate).with(block)
+      YADM.migrate(:test, &block)
+    end
+  end
 end

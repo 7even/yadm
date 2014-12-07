@@ -73,6 +73,14 @@ RSpec.describe YADM::Adapters::Memory do
     end
   end
   
+  describe '#migrate' do
+    it 'does nothing' do
+      expect {
+        subject.migrate(:block)
+      }.not_to raise_error
+    end
+  end
+  
   describe YADM::Adapters::Memory::Collection do
     describe '#send_query' do
       let(:criteria) do

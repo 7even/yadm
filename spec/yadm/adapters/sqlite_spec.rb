@@ -269,4 +269,13 @@ RSpec.describe YADM::Adapters::Sqlite do
       end
     end
   end
+  
+  describe '#migrate' do
+    let(:block) { double('Block') }
+    
+    it 'calls the given block passing it the database connection' do
+      expect(block).to receive(:call).with(connection)
+      subject.migrate(block)
+    end
+  end
 end

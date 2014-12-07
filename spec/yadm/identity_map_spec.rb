@@ -116,4 +116,13 @@ RSpec.describe YADM::IdentityMap do
       expect(subject.send_query(:people, query)).to eq(data)
     end
   end
+  
+  describe '#migrate' do
+    let(:block) { double('Block') }
+    
+    it 'passes the method call to the data source' do
+      expect(data_source).to receive(:migrate).with(block)
+      subject.migrate(block)
+    end
+  end
 end

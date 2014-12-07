@@ -35,6 +35,10 @@ module YADM
         collections[collection_name].send_query(query)
       end
       
+      def migrate(block)
+        # do nothing here (memory adapter doesn't need migrations)
+      end
+      
       class Collection
         attr_reader :objects
         private :objects
