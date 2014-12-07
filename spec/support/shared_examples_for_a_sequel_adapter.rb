@@ -3,7 +3,7 @@ RSpec.shared_examples 'a sequel adapter' do
   let(:now)        { Time.now }
   
   before(:each) do
-    connection.create_table :people do
+    connection.create_table! :people do
       primary_key :id
       
       String :name
@@ -85,12 +85,8 @@ RSpec.shared_examples 'a sequel adapter' do
     it 'filters, orders and limits the records' do
       data = subject.send_query(:posts, query)
       
-      expect(data).to eq([
-        id:             1,
-        title:          'First',
-        comments_count: 7,
-        created_at:     now - 10
-      ])
+      expect(data.count).to eq(1)
+      expect(data.first[:id]).to eq(1)
     end
   end
   

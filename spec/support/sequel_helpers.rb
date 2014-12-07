@@ -1,6 +1,6 @@
 module SequelHelpers
   def setup_table
-    connection.create_table :posts do
+    connection.create_table! :posts do
       primary_key :id
       
       String   :title
