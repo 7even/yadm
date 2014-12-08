@@ -24,10 +24,10 @@ module CriteriaHelpers
   end
   
   def build_attribute(name)
-    YADM::Criteria::Expression::Attribute.new(name)
+    YADM::Criteria::Attribute.new(name)
   end
   
   def build_argument(group, index)
-    YADM::Criteria::Expression::Argument.new(group, index)
+    YADM::Criteria::Argument.new(group, index)
   end
 end

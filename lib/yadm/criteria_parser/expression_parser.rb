@@ -69,7 +69,7 @@ module YADM
         end
         
         def result
-          Criteria::Expression::Attribute.new(name)
+          Criteria::Attribute.new(name)
         end
       end
     end

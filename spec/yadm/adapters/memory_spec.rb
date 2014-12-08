@@ -119,9 +119,10 @@ RSpec.describe YADM::Adapters::Memory do
       end
       
       let(:condition) do
-        attribute = YADM::Criteria::Expression::Attribute.new(:comments_count)
-        expression = YADM::Criteria::Expression.new(attribute, :>, [10])
-        YADM::Criteria::Condition.new(expression)
+        attribute  = build_attribute(:comments_count)
+        expression = build_expression(attribute, :>, 10)
+        
+        build_condition(expression)
       end
       
       it 'returns all records matching the condition' do
@@ -134,11 +135,11 @@ RSpec.describe YADM::Adapters::Memory do
       
       context 'with arguments' do
         let(:condition) do
-          attribute  = YADM::Criteria::Expression::Attribute.new(:comments_count)
-          argument   = YADM::Criteria::Expression::Argument.new(:first, 0)
-          expression = YADM::Criteria::Expression.new(attribute, :>, [argument])
+          attribute  = build_attribute(:comments_count)
+          argument   = build_argument(:first, 0)
+          expression = build_expression(attribute, :>, argument)
           
-          YADM::Criteria::Condition.new(expression)
+          build_condition(expression)
         end
         
         it 'returns all records matching the condition' do
@@ -161,13 +162,13 @@ RSpec.describe YADM::Adapters::Memory do
       end
       
       let(:order) do
-        created_at = YADM::Criteria::Expression::Attribute.new(:created_at)
-        timestamp_clause = YADM::Criteria::Order::Clause.new(:asc, created_at)
+        created_at = build_attribute(:created_at)
+        timestamp_clause = build_order_clause(:asc, created_at)
         
-        id = YADM::Criteria::Expression::Attribute.new(:id)
-        id_clause = YADM::Criteria::Order::Clause.new(:desc, id)
+        id = build_attribute(:id)
+        id_clause = build_order_clause(:desc, id)
         
-        YADM::Criteria::Order.new([timestamp_clause, id_clause])
+        build_order([timestamp_clause, id_clause])
       end
       
       it 'returns records in the specified order' do
@@ -179,12 +180,12 @@ RSpec.describe YADM::Adapters::Memory do
       
       context 'with arguments' do
         let(:order) do
-          name = YADM::Criteria::Expression::Attribute.new(:name)
-          argument = YADM::Criteria::Expression::Argument.new(:first, 0)
-          expression = YADM::Criteria::Expression.new(name, :[], [argument])
+          name       = build_attribute(:name)
+          argument   = build_argument(:first, 0)
+          expression = build_expression(name, :[], argument)
           
-          clause = YADM::Criteria::Order::Clause.new(:asc, expression)
-          YADM::Criteria::Order.new([clause])
+          clause = build_order_clause(:asc, expression)
+          build_order([clause])
         end
         
         it 'returns records in the specified order' do
@@ -203,7 +204,7 @@ RSpec.describe YADM::Adapters::Memory do
         subject.add(name: 'Third')
       end
       
-      let(:limit) { YADM::Criteria::Limit.new(2) }
+      let(:limit) { build_limit(2) }
       
       it 'returns first N records' do
         result = subject.limit(subject.all, limit, {})
@@ -215,8 +216,8 @@ RSpec.describe YADM::Adapters::Memory do
       
       context 'with arguments' do
         let(:limit) do
-          argument = YADM::Criteria::Expression::Argument.new(:first, 0)
-          YADM::Criteria::Limit.new(argument)
+          argument = build_argument(:first, 0)
+          build_limit(argument)
         end
         
         it 'returns first N records' do

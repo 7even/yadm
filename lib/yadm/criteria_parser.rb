@@ -10,7 +10,7 @@ module YADM
     
     def result(arguments_group)
       arguments = block.arity.times.map do |index|
-        YADM::Criteria::Expression::Argument.new(arguments_group, index)
+        YADM::Criteria::Argument.new(arguments_group, index)
       end
       
       instance_exec(*arguments, &block).result

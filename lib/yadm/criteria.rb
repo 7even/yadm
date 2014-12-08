@@ -1,4 +1,6 @@
 require 'yadm/criteria/expression'
+require 'yadm/criteria/attribute'
+require 'yadm/criteria/argument'
 require 'yadm/criteria/condition'
 require 'yadm/criteria/order'
 require 'yadm/criteria/limit'

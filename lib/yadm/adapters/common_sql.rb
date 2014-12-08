@@ -78,7 +78,7 @@ module YADM
       end
       
       def take(dataset, limit, arguments)
-        number = if limit.is_a?(YADM::Criteria::Expression::Argument)
+        number = if limit.is_a?(Criteria::Argument)
           limit.fetch_from(arguments)
         else
           limit
@@ -96,9 +96,9 @@ module YADM
             arguments = node.arguments.map { |arg| sequelize(arg, arguments) }
             
             Sequel::SQL::ComplexExpression.new(operator, receiver, *arguments)
-          when Criteria::Expression::Attribute
+          when Criteria::Attribute
             Sequel::SQL::Identifier.new(node.name)
-          when Criteria::Expression::Argument
+          when Criteria::Argument
             node.fetch_from(arguments)
           else
             node

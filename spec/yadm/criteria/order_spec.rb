@@ -1,15 +1,15 @@
 RSpec.describe YADM::Criteria::Order do
   describe '.merge' do
     let(:first_order) do
-      attribute = YADM::Criteria::Expression::Attribute.new(:last_name)
-      clause = YADM::Criteria::Order::Clause.new(:asc, attribute)
+      attribute = build_attribute(:last_name)
+      clause    = build_order_clause(:asc, attribute)
       
       described_class.new([clause])
     end
     
     let(:second_order) do
-      attribute = YADM::Criteria::Expression::Attribute.new(:first_name)
-      clause = YADM::Criteria::Order::Clause.new(:asc, attribute)
+      attribute = build_attribute(:first_name)
+      clause    = build_order_clause(:asc, attribute)
       
       described_class.new([clause])
     end

@@ -143,7 +143,7 @@ module YADM
         end
         
         def take(records, limit, arguments)
-          number = if limit.is_a?(YADM::Criteria::Expression::Argument)
+          number = if limit.is_a?(Criteria::Argument)
             limit.fetch_from(arguments)
           else
             limit
@@ -159,11 +159,11 @@ module YADM
             arguments = node.arguments.map { |arg| record_eval(record, arg, arguments) }
             
             receiver.send(node.method_name, *arguments)
-          when Criteria::Expression::Attribute
+          when Criteria::Attribute
             record.fetch(node.name) do
               raise ArgumentError, "#{node.name.inspect} attribute not found."
             end
-          when Criteria::Expression::Argument
+          when Criteria::Argument
             node.fetch_from(arguments)
           else
             node
