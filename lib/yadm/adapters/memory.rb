@@ -19,8 +19,8 @@ module YADM
         collections[collection_name].get(id)
       end
       
-      def add(collection_name, object)
-        collections[collection_name].add(object)
+      def add(collection_name, record)
+        collections[collection_name].add(record)
       end
       
       def change(collection_name, id, new_attributes)
@@ -44,33 +44,33 @@ module YADM
       end
       
       class Collection
-        attr_reader :objects
-        private :objects
+        attr_reader :records
+        private :records
         
         def initialize
-          @objects = {}
+          @records = {}
         end
         
         def get(id)
-          objects.fetch(id)
+          records.fetch(id)
         end
         
-        def add(object)
+        def add(record)
           next_id.tap do |new_id|
-            objects[new_id] = object.merge(id: new_id)
+            records[new_id] = record.merge(id: new_id)
           end
         end
         
         def change(id, new_attributes)
-          objects[id].update(new_attributes)
+          records[id].update(new_attributes)
         end
         
         def remove(id)
-          objects.delete(id)
+          records.delete(id)
         end
         
         def count
-          objects.count
+          records.count
         end
         
         def send_query(query)
@@ -80,14 +80,14 @@ module YADM
         end
         
         def all
-          objects.values.dup
+          records.values.dup
         end
         
         def filter(dataset, condition, arguments)
           if condition.nil?
             dataset
           else
-            dataset.select { |object| matches?(object, condition.expression, arguments) }
+            dataset.select { |record| matches?(record, condition.expression, arguments) }
           end
         end
         
@@ -95,7 +95,7 @@ module YADM
           if order.nil?
             dataset
           else
-            dataset.sort { |*objects| compare(objects, order.clauses, arguments) }
+            dataset.sort { |*records| compare(records, order.clauses, arguments) }
           end
         end
         
@@ -122,16 +122,16 @@ module YADM
           end
         end
         
-        def matches?(object, expression, arguments)
-          !!object_eval(object, expression, arguments)
+        def matches?(record, expression, arguments)
+          !!record_eval(record, expression, arguments)
         end
         
-        def compare(objects, clauses, arguments)
+        def compare(records, clauses, arguments)
           clauses.inject(0) do |comparison, clause|
             return comparison unless comparison.zero?
             
-            values = objects.map do |object|
-              object_eval(object, clause.expression, arguments)
+            values = records.map do |record|
+              record_eval(record, clause.expression, arguments)
             end
             
             if clause.asc?
@@ -142,25 +142,25 @@ module YADM
           end
         end
         
-        def take(objects, limit, arguments)
+        def take(records, limit, arguments)
           number = if limit.is_a?(YADM::Criteria::Expression::Argument)
             limit.fetch_from(arguments)
           else
             limit
           end
           
-          objects.take(number)
+          records.take(number)
         end
         
-        def object_eval(object, node, arguments)
+        def record_eval(record, node, arguments)
           case node
           when Criteria::Expression
-            receiver  = object_eval(object, node.receiver, arguments)
-            arguments = node.arguments.map { |arg| object_eval(object, arg, arguments) }
+            receiver  = record_eval(record, node.receiver, arguments)
+            arguments = node.arguments.map { |arg| record_eval(record, arg, arguments) }
             
             receiver.send(node.method_name, *arguments)
           when Criteria::Expression::Attribute
-            object.fetch(node.name) do
+            record.fetch(node.name) do
               raise ArgumentError, "#{node.name.inspect} attribute not found."
             end
           when Criteria::Expression::Argument

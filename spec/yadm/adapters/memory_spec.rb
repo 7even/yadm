@@ -36,7 +36,7 @@ RSpec.describe YADM::Adapters::Memory do
       expect(subject.add(:people, person_attributes)).to eq(1)
     end
     
-    it 'adds the id attribute to the created object' do
+    it 'adds the id attribute to the created record' do
       id = subject.add(:people, person_attributes)
       expect(subject.get(:people, id)[:id]).to eq(id)
     end
@@ -93,21 +93,21 @@ RSpec.describe YADM::Adapters::Memory do
       
       let(:query) { double('Query', criteria: criteria, arguments: {}) }
       
-      let(:objects) { %i(first second third fourth) }
-      let(:filtered_objects) { %i(first third fourth) }
-      let(:ordered_objects) { %i(third first fourth) }
-      let(:limited_objects) { %i(third first) }
+      let(:records) { %i(first second third fourth) }
+      let(:filtered_records) { %i(first third fourth) }
+      let(:ordered_records) { %i(third first fourth) }
+      let(:limited_records) { %i(third first) }
       
       before(:each) do
-        allow(subject).to receive(:all).and_return(objects)
+        allow(subject).to receive(:all).and_return(records)
       end
       
-      it 'returns the transformed objects collection' do
-        expect(subject).to receive(:filter).with(objects, :some_condition, {}).and_return(filtered_objects)
-        expect(subject).to receive(:order).with(filtered_objects, :some_order, {}).and_return(ordered_objects)
-        expect(subject).to receive(:limit).with(ordered_objects, :some_limit, {}).and_return(limited_objects)
+      it 'returns the transformed records collection' do
+        expect(subject).to receive(:filter).with(records, :some_condition, {}).and_return(filtered_records)
+        expect(subject).to receive(:order).with(filtered_records, :some_order, {}).and_return(ordered_records)
+        expect(subject).to receive(:limit).with(ordered_records, :some_limit, {}).and_return(limited_records)
         
-        expect(subject.send_query(query)).to eq(limited_objects)
+        expect(subject.send_query(query)).to eq(limited_records)
       end
     end
     
