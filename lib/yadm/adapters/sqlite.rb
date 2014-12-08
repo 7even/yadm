@@ -4,7 +4,10 @@ require 'sqlite3'
 module YADM
   module Adapters
     class Sqlite
+      include Base
       include CommonSQL
+      
+      register :sqlite
       
       def initialize(connection_parameters = {})
         @connection = Sequel.connect(adapter: :sqlite, **connection_parameters)

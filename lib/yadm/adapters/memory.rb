@@ -1,6 +1,10 @@
 module YADM
   module Adapters
     class Memory
+      include Base
+      
+      register :memory
+      
       attr_reader :collections
       private :collections
       
