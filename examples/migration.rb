@@ -13,7 +13,7 @@ module Posts
   entity Post
   
   criteria :recent do
-    ascending_by { created_at }.first(20)
+    descending_by { created_at }.first(20)
   end
   
   criteria :created_by do |given_author|
