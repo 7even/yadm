@@ -5,7 +5,7 @@ module SequelHelpers
       
       String   :title
       Integer  :comments_count
-      Datetime :created_at
+      DateTime :created_at
     end
     
     [

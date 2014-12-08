@@ -35,6 +35,14 @@ RSpec.shared_examples 'a sequel adapter' do
     it 'returns the id of the created record' do
       expect(subject.add(:people, person_attributes)).to eq(1)
     end
+    
+    context 'with a nil id attribute' do
+      it 'ignores the id' do
+        expect {
+          subject.add(:people, person_attributes.merge(id: nil))
+        }.to change { subject.count(:people) }.by(1)
+      end
+    end
   end
   
   describe '#change' do

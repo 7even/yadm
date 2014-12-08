@@ -10,8 +10,10 @@ module YADM
         connection[table_name][id: id]
       end
       
-      def add(table_name, object)
-        connection[table_name].insert(object)
+      def add(table_name, new_attributes)
+        new_attributes = new_attributes.dup
+        new_attributes.delete(:id)
+        connection[table_name].insert(new_attributes)
       end
       
       def change(table_name, id, new_attributes)
