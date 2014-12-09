@@ -256,7 +256,9 @@ _You must define the respective data source before trying to migrate it._
 ## Acknowledgements
 
 This project is heavily inspired by [lotus/model](https://github.com/lotus/model)
-and [ROM](http://rom-rb.org).
+and [ROM](http://rom-rb.org) projects, the [famous Uncle Bob's
+"Architecture the Lost Years"](http://www.youtube.com/watch?v=WpkDN78P884)
+and [POODR](http://www.poodr.com/) of course.
 
 ## Examples
 
