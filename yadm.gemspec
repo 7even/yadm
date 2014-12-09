@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = YADM::VERSION
   spec.authors       = ['Vsevolod Romashov']
   spec.email         = ['7@7vn.ru']
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Yet Another Data Mapper}
+  spec.description   = %q{Another attempt to implement data mapper with repositories and adapters in ruby.}
   spec.homepage      = 'https://github.com/7even/yadm'
   spec.license       = 'MIT'
   
