@@ -1,5 +1,7 @@
 # YADM - Yet Another Data Mapper
 
+[![Build Status](https://travis-ci.org/7even/yadm.svg)](https://travis-ci.org/7even/yadm)
+
 Another attempt to implement Data Mapper in ruby.
 
 Built with 2 goals in mind:
