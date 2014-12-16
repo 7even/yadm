@@ -1,6 +1,7 @@
 # YADM - Yet Another Data Mapper
 
 [![Build Status](https://travis-ci.org/7even/yadm.svg)](https://travis-ci.org/7even/yadm)
+[![Code Climate](https://codeclimate.com/github/7even/yadm/badges/gpa.svg)](https://codeclimate.com/github/7even/yadm)
 
 Another attempt to implement Data Mapper in ruby.
 
