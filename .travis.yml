@@ -1,3 +1,8 @@
 rvm:
   - 2.1.5
 script: bundle exec rspec spec
+addons:
+  postgresql: 9.3
+before_script:
+  - psql -c "CREATE DATABASE yadm_test;" -U postgres
+  - psql -c "CREATE USER yadm WITH PASSWORD 'yadm';" -U postgres
